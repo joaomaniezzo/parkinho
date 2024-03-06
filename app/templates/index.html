@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkinho</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: aliceblue; font-size: 60px;">P A R K I N H O</h1>
+        <div class="section-container">
+            <div class="title-div">
+                <h1>Entrada</h1>
+                <p>*Esta sessão é exclusiva para registro de entrada de veículos</p>
+            </div>
+            <div class="form-div">
+                <form style="display: flex;width: 100%; justify-content: space-around;" action="">
+                    <input type="text" id="myInput" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
+                    <input type="text" oninput="upperCase(this)" maxlength="12" placeholder="Modelo">
+                    <input style="margin: 0;" type="submit" value="OK">
+                </form>
+            </div>
+        </div>
+        <div class="section-container">
+            <div class="title-div">
+                <h1>Saída</h1>
+                <p>*Esta sessão é exclusiva para registro de saída de veículos</p>
+
+            </div>
+            <div class="form-div">
+                <form style="display: flex;width: 100%; justify-content: space-around;" action="">
+                    <input type="text" id="myInput" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
+                    <input style="margin: 0;background-color: red;" type="submit" value="OK">
+                    <div class="total">R$ 40,00</div>
+                </form>
+            </div>
+        </div>
+
+        <div class="section-container2">
+            <div id="historico">
+                <div class="title-div">
+                    <h1>Histórico</h1>
+                    <p>Consulte o histórico de movimento do estacionamento</p>
+                </div>
+            </div>
+
+            <div id="mensalista" style="text-align: center;">
+                <div class="title">
+                    <h1>Mensalistas</h1>
+                    <p>Consulte e cadastre mensalistas</p>
+                    <form action="">
+                        <input type="text" id="myInput" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
+                        <input type="text" id="inputName" oninput="upperCase(this)" placeholder="Nome"><br>
+                        <input style="font-size: 25px; width: 200px;" type="submit" value="Cadastrar">
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        
+
+
+    </div>
+</body>
+<script src="/app/static/js/script.js"></script>
+</html>

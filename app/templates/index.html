@@ -16,11 +16,12 @@
                 <p>*Esta sessão é exclusiva para registro de entrada de veículos</p>
             </div>
             <div class="form-div">
-                <form style="display: flex;width: 100%; justify-content: space-around;" action="">
-                    <input type="text" id="myInput" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
-                    <input type="text" oninput="upperCase(this)" maxlength="12" placeholder="Modelo">
+                <form style="display: flex;width: 100%; justify-content: space-around;" action="/entrada" method='post'>
+                    <input type="text" id="inputPlacaEntrada" oninput="formatInput(this)" maxlength="8" name="inputPlacaEntrada" placeholder="Placa" required>
+                    <input type="text" oninput="upperCase(this)" maxlength="12" name="inputModelo" placeholder="Modelo" required>
                     <input style="margin: 0;" type="submit" value="OK">
                 </form>
+                
             </div>
         </div>
         <div class="section-container">
@@ -30,7 +31,8 @@
 
             </div>
             <div class="form-div">
-                <form style="display: flex;width: 100%; justify-content: space-around;" action="">
+                <form style="display: flex;width: 100%; justify-content: space-around;" action="entrada" method='post'>
+
                     <input type="text" id="myInput" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
                     <input style="margin: 0;background-color: red;" type="submit" value="OK">
                     <div class="total">R$ 40,00</div>
@@ -50,7 +52,7 @@
                 <div class="title">
                     <h1>Mensalistas</h1>
                     <p>Consulte e cadastre mensalistas</p>
-                    <form action="">
+                    <form action="mensalista" method="post">
                         <input type="text" id="myInput" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
                         <input type="text" id="inputName" oninput="upperCase(this)" placeholder="Nome"><br>
                         <input style="font-size: 25px; width: 200px;" type="submit" value="Cadastrar">
@@ -65,5 +67,6 @@
 
     </div>
 </body>
-<script src="/app/static/js/script.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
 </html>

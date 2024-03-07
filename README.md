@@ -9,9 +9,9 @@ Projeto de 4° período da disciplina Software Product: Analysis & Specification
 - Pedro Luis da Paz dos Santos  
 
 # banco
-CREATE TABLE testebancoentrada (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    placa VARCHAR(20),
-    modelo VARCHAR(50),  -- Adicionando a coluna 'modelo'
-    horario TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE testebancoentrada (  
+    id INT AUTO_INCREMENT PRIMARY KEY,  
+    placa VARCHAR(20),  
+    modelo VARCHAR(50),  
+    horario TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
 );

@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 from flask_mysqldb import MySQL
+from datetime import datetime, timedelta, date
 
 
 app = Flask(__name__)
@@ -21,13 +22,16 @@ def entrada():
 
     if request.method == 'POST':
 
+        # _data = date.today().strftime("%d/%m/%Y") > apenas data formatada br
+
         _placa = request.form['inputPlacaEntrada']
         _modelo = request.form['inputModelo']
-
-        print(f"Placa: {_placa}, Modelo: {_modelo}")
+         #_horario = datetime.now().strftime("%H:%M:%S") > apenas horario formatado br
+        data = date.today()
+        horario_entrada = datetime.now()
 
         cur = mysql.connection.cursor()
-        cur.execute(""" insert into testeplacaentrada (placa, modelo) VALUES (%s, %s)""", (_placa,_modelo))
+        cur.execute("INSERT INTO sua_tabela (data, placa, modelo, horario_entrada) VALUES (%s, %s,%s, %s)", (data, _placa, _modelo, horario_entrada))
 
         mysql.connection.commit()
 

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parkinho</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
 </head>
 <body>
@@ -23,6 +25,7 @@
                 </form>
                 
             </div>
+            <div id="span_entrada_confirm" class="span">  </div>
         </div>
         <div class="section-container">
             <div class="title-div">
@@ -37,6 +40,11 @@
                     <input style="margin: 0;background-color: red;" type="submit" value="OK">
                     <div class="total">R$ 40,00</div>
                 </form>
+            </div>
+            <div class="span">
+
+                <span> </span>
+
             </div>
         </div>
 
@@ -68,5 +76,6 @@
     </div>
 </body>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
 
 </html>

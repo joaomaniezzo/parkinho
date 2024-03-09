@@ -17,3 +17,9 @@ CREATE TABLE sua_tabela (
     horario_entrada TIME NOT NULL,  
     horario_saida TIME  
 );  
+
+CREATE TABLE mensalista (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    placa VARCHAR(8) NOT NULL,
+    nome VARCHAR(255) NOT NULL
+);

@@ -81,6 +81,17 @@
                         <input type="text" id="inputName" name="inputName" oninput="upperCase(this)" placeholder="Nome"><br>
                         <input style="font-size: 25px; width: 200px;" type="submit" value="Cadastrar">
                     </form>
+                <div class="table-container">
+                    <table id="mensalista-table" class="table" >
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Placa</th>
+                                <th>Nome</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -114,9 +125,30 @@
         });
     }
 
+
     // Chamar a função de carregamento inicial
     loadHistorico();
+
+    function loadMensalistas(){
+            $.get("/mensalista_data", function(data) {
+
+                $("#mensalista-table tbody").empty();
+                
+
+                data.forEach(function (row) {
+                    var newRow = "<tr><td>" + row.id + "</td><td>" +
+                        row.placa + "</td><td>" +
+                        row.nome + "</td></tr>";
+
+                $('#mensalista-table tbody').append(newRow);
+            });
+        });
+    }
+    
+    loadMensalistas();
 </script>
+
+
 
 
 

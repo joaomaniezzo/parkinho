@@ -99,9 +99,27 @@ def get_historico_data():
             'modelo': row[3],
             'entrada': str(row[4]),
             'saida': str(row[5]),
-            # Adicione mais campos conforme necessário
+            
         })
 
+    return jsonify(data)
+
+@app.route('/mensalista_data')
+def get_mensalist_data():
+
+    cur = mysql.connection.cursor()
+    query = "SELECT * FROM mensalistas ORDER BY id DESC"
+    cur.execute(query)
+    result = cur.fetchall()
+
+    data = []
+    for row in result:
+        data.append({
+            'id':row[0],
+            'placa':row[1],
+            'nome': row[2]
+        })
+    
     return jsonify(data)
 
     

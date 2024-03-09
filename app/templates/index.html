@@ -34,11 +34,11 @@
 
             </div>
             <div class="form-div">
-                <form style="display: flex;width: 100%; justify-content: space-around;" action="entrada" method='post'>
+                <form style="display: flex;width: 100%; justify-content: space-around;" action="/saida" method='post'>
 
-                    <input type="text" id="myInput" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
+                    <input type="text" id="inputPlacaSaida" name="inputPlacaSaida" oninput="formatInput(this)" maxlength="8" placeholder="Placa" required>
                     <input style="margin: 0;background-color: red;" type="submit" value="OK">
-                    <div class="total">R$ 40,00</div>
+                    <div class="total">R$</div>
                 </form>
             </div>
             <div class="span">
@@ -54,15 +54,31 @@
                     <h1>Histórico</h1>
                     <p>Consulte o histórico de movimento do estacionamento</p>
                 </div>
+                <div class="table_container">
+                    <table id="historico-table" class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data</th>
+                                <th>Placa</th>
+                                <th>Modelo</th>
+                                <th>Entrada</th>
+                                <th>Saída</th>
+                                <!-- Adicione mais colunas conforme necessário -->
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="mensalista" style="text-align: center;">
                 <div class="title">
                     <h1>Mensalistas</h1>
                     <p>Consulte e cadastre mensalistas</p>
-                    <form action="mensalista" method="post">
-                        <input type="text" id="myInput" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
-                        <input type="text" id="inputName" oninput="upperCase(this)" placeholder="Nome"><br>
+                    <form action="/mensalista" method="post">
+                        <input type="text" id="inputPlacaMensalista" name="inputPlacaMensalista" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
+                        <input type="text" id="inputName" name="inputName" oninput="upperCase(this)" placeholder="Nome"><br>
                         <input style="font-size: 25px; width: 200px;" type="submit" value="Cadastrar">
                     </form>
                 </div>
@@ -75,7 +91,33 @@
 
     </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>
+    // Função para carregar dados do histórico
+    function loadHistorico() {
+        $.get("/historico_data", function (data) {
+            // Limpar a tabela
+            $("#historico-table tbody").empty();
+
+            // Preencher a tabela com os novos dados
+            data.forEach(function (row) {
+                var newRow = "<tr><td>" + row.id + "</td><td>" +
+                    row.data + "</td><td>" + 
+                    row.placa + "</td><td>" + 
+                    row.modelo + "</td><td>" + 
+                    row.entrada + "</td><td>" +
+                    row.saida + "</td></tr>";
+                
+                $("#historico-table tbody").append(newRow);
+            });
+        });
+    }
+
+    // Chamar a função de carregamento inicial
+    loadHistorico();
+</script>
+
 
 
 </html>

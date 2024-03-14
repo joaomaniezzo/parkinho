@@ -9,7 +9,11 @@ Projeto de 4° período da disciplina Software Product: Analysis & Specification
 - Pedro Luis da Paz dos Santos  
 
 # banco
-CREATE TABLE sua_tabela (  
+CREATE schema parkinho
+
+USE parkinho
+
+CREATE TABLE historico (  
     id INT AUTO_INCREMENT PRIMARY KEY,  
     data DATE NOT NULL,  
     placa VARCHAR(20) NOT NULL,  

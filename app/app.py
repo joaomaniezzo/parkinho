@@ -8,7 +8,7 @@ app.static_folder = 'static'
 
 app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_PASSWORD"] = "jv23696406"
-app.config["MYSQL_DB"] = "testebanco"
+app.config["MYSQL_DB"] = "parkinho"
 
 mysql = MySQL(app)
 
@@ -32,7 +32,7 @@ def entrada():
             horario_entrada = datetime.now()
 
             cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO sua_tabela (data, placa, modelo, horario_entrada) VALUES (%s, %s,%s, %s)", (data, _placa, _modelo, horario_entrada))
+            cur.execute("INSERT INTO historico (data, placa, modelo, horario_entrada) VALUES (%s, %s,%s, %s)", (data, _placa, _modelo, horario_entrada))
 
             mysql.connection.commit()
 
@@ -52,7 +52,7 @@ def saida():
 
             horario_saida = datetime.now()
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE sua_tabela SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
+            cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
 
 
             mysql.connection.commit()
@@ -86,7 +86,7 @@ def get_historico_data():
     
 
     cur = mysql.connection.cursor()
-    query = "SELECT * FROM sua_tabela ORDER BY id DESC"
+    query = "SELECT * FROM historico ORDER BY id DESC"
     cur.execute(query)
     result = cur.fetchall()
 

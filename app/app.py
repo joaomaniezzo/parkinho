@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, json, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
 from datetime import datetime, timedelta, date
+import MySQLdb.cursors
 
 
 app = Flask(__name__)
@@ -48,14 +49,21 @@ def saida():
 
         _placa = request.form['inputPlacaSaida']
 
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+        cur.execute("SELECT * FROM historico WHERE placa = %s AND horario_saida IS NULL", (_placa,))
+        vehicle = cur.fetchone()
+
         if _placa:
-
+            
+            entrada = vehicle['horario_entrada']
             horario_saida = datetime.now()
-            cur = mysql.connection.cursor()
             cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
-
-
             mysql.connection.commit()
+            preco = calculate_fee(entrada, horario_saida)
+            cur.close()
+
+            print(f' entrada: {entrada}, said: {horario_saida}, preco {preco}')
 
             return redirect(url_for('saida'))
             
@@ -122,7 +130,36 @@ def get_mensalist_data():
     
     return jsonify(data)
 
+
+def calculate_fee(entrada, saida):
+    fmt = '%Y-%m-%d %H:%M:%S'
     
+    if isinstance(entrada, str):
+        d1 = datetime.strptime(entrada, fmt)
+    else:
+        d1 = entrada
+    
+    if isinstance(saida, str):
+        d2 = datetime.strptime(saida, fmt)
+    else:
+        d2 = saida
+    
+    diff = d2 - d1
+
+    diferenca = str(diff)
+
+    if diferenca[12] == '0':
+        fee = 5
+    
+    if diferenca[12] == '1' :
+        fee = 10
+
+    if diferenca[12] == '2':
+        fee = 15
+
+    print(diferenca[12])
+
+    return fee
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5002, debug=True)

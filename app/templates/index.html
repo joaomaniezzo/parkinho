@@ -34,11 +34,19 @@
 
             </div>
             <div class="form-div">
-                <form style="display: flex;width: 100%; justify-content: space-around;" action="/saida" method='post'>
+                <form style="display: flex;width: 100%; justify-content: space-around; height: 100px;" action="/saida" method='post'>
 
-                    <input type="text" id="inputPlacaSaida" name="inputPlacaSaida" oninput="formatInput(this)" maxlength="8" placeholder="Placa" required>
+                    <input type="text" id="inputPlacaSaida" name="inputPlacaSaida" oninput="formatInput(this)" maxlength="8" placeholder="Placa" >
                     <input style="margin: 0;background-color: red;" type="submit" value="OK">
-                    <div class="total">R$</div>
+                    <div class="total">
+                        {% if preco is not none %}
+                            <h2>R$ {{ preco }}</h2>
+
+                            <form method="post" style="height: 100px;">
+                                <button type="submit" name="pago" >Pago</button>
+                            </form>
+                        {% endif %}
+                    </div>
                 </form>
             </div>
             <div class="span">
@@ -74,7 +82,7 @@
             </div>
 
             <div id="mensalista" style="text-align: center;">
-                <div class="title">
+                <div class="header">
                     <h1>Mensalistas</h1>
                     <p>Consulte e cadastre mensalistas</p>
                     <form action="/mensalista" method="post">
@@ -82,7 +90,8 @@
                         <input type="text" id="inputName" name="inputName" oninput="upperCase(this)" placeholder="Nome"><br>
                         <input style="font-size: 25px; width: 200px;" type="submit" value="Cadastrar">
                     </form>
-                <div class="table-container">
+                </div>
+                <div class="table-container" style="overflow: auto; height: 350px;" >
                     <table id="mensalista-table" class="table">
                         <thead>
                             <tr>
@@ -91,9 +100,19 @@
                                 <th>Nome</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+
+                        </tbody>
                     </table>
                 </div>
+                
+                <div class="delete-mesalista">
+                    <form action="/excluir_mensalista" method="post">
+                        <input type="text" id="inputExcluirMensalista" name="inputExcluirMensalista" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
+                        <input type="submit" name="excluir" id="excluir" value="Excluir">
+                    </form>
+                </div>
+
             </div>
 
         </div>
@@ -105,6 +124,8 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
 <script>
     // Função para carregar dados do histórico
     function loadHistorico() {
@@ -147,6 +168,9 @@
     }
     
     loadMensalistas();
+
+    
+
 </script>
 
 

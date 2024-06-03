@@ -47,25 +47,30 @@ def saida():
 
     if request.method == 'POST':
 
-        _placa = request.form['inputPlacaSaida']
+        if 'inputPlacaSaida' in request.form:
 
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            _placa = request.form['inputPlacaSaida']
 
-        cur.execute("SELECT * FROM historico WHERE placa = %s AND horario_saida IS NULL", (_placa,))
-        vehicle = cur.fetchone()
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-        if _placa:
+            cur.execute("SELECT * FROM historico WHERE placa = %s AND horario_saida IS NULL", (_placa,))
+            vehicle = cur.fetchone()
+
+            if _placa:
+                
+                entrada = vehicle['horario_entrada']
+                horario_saida = datetime.now()
+                cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
+                mysql.connection.commit()
+                preco = calculate_fee(entrada, horario_saida)
+                cur.close()
+
+                return render_template('index.html', preco=preco)
             
-            entrada = vehicle['horario_entrada']
-            horario_saida = datetime.now()
-            cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
-            mysql.connection.commit()
-            preco = calculate_fee(entrada, horario_saida)
-            cur.close()
 
-            print(f' entrada: {entrada}, said: {horario_saida}, preco {preco}')
-
-            return redirect(url_for('saida'))
+        elif 'pago' in request.form:
+                preco = None
+                #return redirect(url_for('saida'))
             
     return render_template('index.html')
 
@@ -87,6 +92,24 @@ def mensalista():
             return redirect(url_for('mensalista'))
     
     return render_template('index.html')
+
+@app.route('/excluir_mensalista' , methods=['post'])
+def excluir_mensalista():
+    if request.method == ['post']:
+        _placa = request.form['inputExcluirMensalista']
+
+        if _placa:
+
+            cur = mysql.connection.cursor()
+            cur.execute ("DELETE FROM mensalistas WHERE placa=%s", (_placa))
+
+            mysql.connection.commit()
+
+            return redirect(url_for('mensalista'))
+
+    return render_template('index.html')  
+    
+
 
 
 @app.route('/historico_data')

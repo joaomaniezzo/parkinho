@@ -60,11 +60,24 @@ def saida():
                 
                 entrada = vehicle['horario_entrada']
                 horario_saida = datetime.now()
-                cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
-                mysql.connection.commit()
-                preco = calculate_fee(entrada, horario_saida)
-                cur.close()
 
+                cur.execute("SELECT * FROM mensalistas WHERE placa = %s", (_placa,))
+                mensalista_vehicle = cur.fetchone()
+
+                if mensalista_vehicle:
+
+                    preco = 0
+                    cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
+                    mysql.connection.commit()
+
+                else:
+
+                    cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
+                    mysql.connection.commit()
+                    preco = calculate_fee(entrada, horario_saida)
+
+
+                cur.close()
                 return render_template('index.html', preco=preco)
             
 
@@ -91,6 +104,21 @@ def mensalista():
 
             return redirect(url_for('mensalista'))
     
+    return render_template('index.html')
+
+@app.route('/delete_plate', methods=['POST'])
+def delete_plate():
+    if request.method == 'POST':
+        plate = request.form['plate']
+
+        # Delete the entry from the database
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute("DELETE FROM mensalistas WHERE placa = %s", (plate,))
+        mysql.connection.commit()
+        cur.close()
+
+        # Flash a message to indicate success or failure
+        
     return render_template('index.html')
 
 @app.route('/excluir_mensalista' , methods=['post'])
@@ -179,6 +207,14 @@ def calculate_fee(entrada, saida):
 
     if diferenca[12] == '2':
         fee = 15
+
+    if diferenca[12] == '3':
+        fee = 20
+
+    if diferenca[12] == '4':
+        fee = 25
+
+    else: fee = 30  
 
     print(diferenca[12])
 

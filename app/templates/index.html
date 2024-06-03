@@ -86,8 +86,8 @@
                     <h1>Mensalistas</h1>
                     <p>Consulte e cadastre mensalistas</p>
                     <form action="/mensalista" method="post">
-                        <input type="text" id="inputPlacaMensalista" name="inputPlacaMensalista" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
-                        <input type="text" id="inputName" name="inputName" oninput="upperCase(this)" placeholder="Nome"><br>
+                        <input type="text" id="inputPlacaMensalista" name="inputPlacaMensalista" oninput="formatInput(this)" maxlength="8" placeholder="Placa" required>
+                        <input type="text" id="inputName" name="inputName" oninput="upperCase(this)" placeholder="Nome" required><br>
                         <input style="font-size: 25px; width: 200px;" type="submit" value="Cadastrar">
                     </form>
                 </div>
@@ -107,9 +107,11 @@
                 </div>
                 
                 <div class="delete-mesalista">
-                    <form action="/excluir_mensalista" method="post">
-                        <input type="text" id="inputExcluirMensalista" name="inputExcluirMensalista" oninput="formatInput(this)" maxlength="8" placeholder="Placa">
-                        <input type="submit" name="excluir" id="excluir" value="Excluir">
+                    <form action="{{ url_for('delete_plate') }}" method="POST">
+                        <input type="text" id="plate" name="plate" oninput="formatInput(this)" maxlength="8" placeholder="Placa" required>
+                        <button type="submit" style="background-color: red; height: 40px; width: 100px; font-size: 20px; display: flexbox; align-items: center; justify-content: center; cursor: pointer;">
+                            Excluir
+                        </button>
                     </form>
                 </div>
 

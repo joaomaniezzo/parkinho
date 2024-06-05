@@ -28,27 +28,35 @@ def entrada():
         _modelo = request.form['inputModelo']
          #_horario = datetime.now().strftime("%H:%M:%S") > apenas horario formatado br
         if _placa and _modelo:
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-            data = date.today()
-            horario_entrada = datetime.now()
+            # Verifica se já existe um registro de entrada sem saída para a placa fornecida
+            cur.execute("SELECT * FROM historico WHERE placa = %s AND horario_saida IS NULL", (_placa,))
+            existing_record = cur.fetchone()
 
-            cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO historico (data, placa, modelo, horario_entrada) VALUES (%s, %s,%s, %s)", (data, _placa, _modelo, horario_entrada))
+            if existing_record:
 
-            mysql.connection.commit()
+                error_message = "Placa fornecida já possui registro de entrada em aberto"
+                cur.close()
+                return render_template('index.html', errorEntrada=error_message)
+            else:
 
+                data = date.today()
+                horario_entrada = datetime.now()
+                cur.execute("INSERT INTO historico (data, placa, modelo, horario_entrada) VALUES (%s, %s, %s, %s)", (data, _placa, _modelo, horario_entrada))
+                mysql.connection.commit()
+
+
+            cur.close()
 
             return redirect(url_for('entrada'))
-    
+
     return render_template('index.html')
 
 @app.route('/saida', methods=['POST', 'GET'])
 def saida():
-
     if request.method == 'POST':
-
         if 'inputPlacaSaida' in request.form:
-
             _placa = request.form['inputPlacaSaida']
 
             cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -56,8 +64,7 @@ def saida():
             cur.execute("SELECT * FROM historico WHERE placa = %s AND horario_saida IS NULL", (_placa,))
             vehicle = cur.fetchone()
 
-            if _placa:
-                
+            if vehicle:
                 entrada = vehicle['horario_entrada']
                 horario_saida = datetime.now()
 
@@ -65,27 +72,25 @@ def saida():
                 mensalista_vehicle = cur.fetchone()
 
                 if mensalista_vehicle:
-
                     preco = 0
-                    cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
-                    mysql.connection.commit()
-
                 else:
-
-                    cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
-                    mysql.connection.commit()
                     preco = calculate_fee(entrada, horario_saida)
 
-
+                cur.execute("UPDATE historico SET horario_saida = %s WHERE placa = %s AND horario_saida is NULL", (horario_saida, _placa))
+                mysql.connection.commit()
                 cur.close()
-                return render_template('index.html', preco=preco)
-            
 
-        elif 'pago' in request.form:
-                preco = None
-                #return redirect(url_for('saida'))
+                return render_template('index.html', preco=preco)
+            else:
+                error_message = "Nenhum registro de entrada em aberto encontrado para a placa fornecida."
+                cur.close()
+                return render_template('index.html', errorSaida=error_message)
+        
+
             
     return render_template('index.html')
+
+
 
 
 @app.route('/mensalista' , methods=['POST', 'GET'])
@@ -97,12 +102,23 @@ def mensalista():
 
         if _placa and _nome:
 
-            cur = mysql.connection.cursor()
-            cur.execute ("INSERT INTO mensalistas (placa, nome) VALUES( %s, %s)", (_placa, _nome))
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-            mysql.connection.commit()
+            # Verifica se a placa já está registrada como mensalista
+            cur.execute("SELECT * FROM mensalistas WHERE placa = %s", (_placa,))
+            existing_record = cur.fetchone()
 
-            return redirect(url_for('mensalista'))
+            if existing_record:
+                error_message = "Placa fornecida já existente"
+                cur.close()
+                return render_template('index.html', errorInsertMensalista=error_message)
+            
+            else:
+                cur.execute ("INSERT INTO mensalistas (placa, nome) VALUES( %s, %s)", (_placa, _nome))
+
+                mysql.connection.commit()
+
+                return redirect(url_for('mensalista'))
     
     return render_template('index.html')
 
@@ -114,12 +130,18 @@ def delete_plate():
         # Delete the entry from the database
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cur.execute("DELETE FROM mensalistas WHERE placa = %s", (plate,))
+        rows_affected = cur.rowcount
         mysql.connection.commit()
         cur.close()
 
-        # Flash a message to indicate success or failure
+        if rows_affected >0: 
+            return render_template('index.html')
+        else:
+            error_message = "Não há veículo mensalista registrado com a placa fornecida"
+            return render_template('index.html', errorDeleteMensalista=error_message)
+
         
-    return render_template('index.html')
+    
 
 @app.route('/excluir_mensalista' , methods=['post'])
 def excluir_mensalista():
@@ -214,7 +236,6 @@ def calculate_fee(entrada, saida):
     if diferenca[12] == '4':
         fee = 25
 
-    else: fee = 30  
 
     print(diferenca[12])
 

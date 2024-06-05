@@ -10,6 +10,32 @@
 
 </head>
 <body>
+    {% if errorSaida %}
+        <script type="text/javascript">
+            alert("{{ errorSaida }}");
+        </script>
+    {% endif %}
+
+    {% if errorDeleteMensalista %}
+        <script type="text/javascript">
+            alert("{{ errorDeleteMensalista }}");
+        </script>
+    {% endif %}
+
+    {% if errorInsertMensalista %}
+        <script type="text/javascript">
+            alert("{{ errorInsertMensalista }}");
+        </script>
+    {% endif %}
+
+    {% if errorEntrada %}
+        <script type="text/javascript">
+            alert("{{ errorEntrada }}");
+        </script>
+    {% endif %}
+
+
+
     <div class="container">
         <h1 style="text-align: center; color: aliceblue; font-size: 60px;">P A R K I N H O</h1>
         <div class="section-container">
@@ -40,14 +66,12 @@
                     <input style="margin: 0;background-color: red;" type="submit" value="OK">
                     <div class="total">
                         {% if preco is not none %}
-                            <h2>R$ {{ preco }}</h2>
-
-                            <form method="post" style="height: 100px;">
-                                <button type="submit" name="pago" >Pago</button>
-                            </form>
+                            <h2 id="preco"  >R$ {{ preco }}</h2>
                         {% endif %}
+                        
                     </div>
                 </form>
+                <button id="btn-pago" style="padding: 10px; background-color: green; color: white; margin-right: 30px; cursor: pointer; font-size: 25px;">Pago</button>
             </div>
             <div class="span">
 
@@ -171,9 +195,20 @@
     
     loadMensalistas();
 
+    document.getElementById("btn-pago").addEventListener("click", function() {
+    // Define o preço como vazio para zerá-lo
+    document.getElementById("preco").innerText = "";
+    });
+
     
 
 </script>
+<script>
+    document.getElementById("btn-pago").addEventListener("click", function() {
+        // Define o preço como vazio para zerá-lo
+        document.getElementById("preco").innerText = "R$";
+    });
+    </script>
 
 
 

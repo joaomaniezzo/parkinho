@@ -236,6 +236,8 @@ def calculate_fee(entrada, saida):
     if diferenca[12] == '4':
         fee = 25
 
+    if diferenca[12] > '4':
+        fee = 30
 
     print(diferenca[12])
 
